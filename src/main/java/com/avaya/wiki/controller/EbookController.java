@@ -1,6 +1,7 @@
 package com.avaya.wiki.controller;
 
 import com.avaya.wiki.domain.Ebook;
+import com.avaya.wiki.response.CommonResponse;
 import com.avaya.wiki.service.EbookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,11 @@ public class EbookController {
     private final EbookService ebookService;
 
     @GetMapping("/list")
-    public List<Ebook> list() {
-        return ebookService.list();
+    public CommonResponse<List<Ebook>> list() {
+        CommonResponse<List<Ebook>> commonResponse = new CommonResponse<List<Ebook>>();
+        commonResponse.setSuccess(true);
+        commonResponse.setMessage("200 OK");
+        commonResponse.setData(ebookService.list());
+        return commonResponse;
     }
 }
