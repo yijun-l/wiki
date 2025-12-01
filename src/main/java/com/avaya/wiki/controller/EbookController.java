@@ -1,6 +1,7 @@
 package com.avaya.wiki.controller;
 
 import com.avaya.wiki.domain.Ebook;
+import com.avaya.wiki.request.EbookQuery;
 import com.avaya.wiki.response.CommonResponse;
 import com.avaya.wiki.service.EbookService;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,11 @@ public class EbookController {
     private final EbookService ebookService;
 
     @GetMapping("/list")
-    public CommonResponse<List<Ebook>> list() {
+    public CommonResponse<List<Ebook>> list(EbookQuery ebookQuery) {
         CommonResponse<List<Ebook>> commonResponse = new CommonResponse<List<Ebook>>();
         commonResponse.setSuccess(true);
         commonResponse.setMessage("200 OK");
-        commonResponse.setData(ebookService.list());
+        commonResponse.setData(ebookService.list(ebookQuery));
         return commonResponse;
     }
 }

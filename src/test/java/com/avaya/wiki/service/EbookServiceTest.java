@@ -2,6 +2,7 @@ package com.avaya.wiki.service;
 
 import com.avaya.wiki.domain.Ebook;
 import com.avaya.wiki.mapper.EbookMapper;
+import com.avaya.wiki.request.EbookQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +40,7 @@ public class EbookServiceTest {
     void list_ShouldReturnAllEbooks() {
         when(ebookMapper.list()).thenReturn(Arrays.asList(ebook1, ebook2));
 
-        List<Ebook> result = ebookService.list();
+        List<Ebook> result = ebookService.list(new EbookQuery());
         assertNotNull(result);
         assertEquals(2, result.size());
         assertTrue(result.contains(ebook1));

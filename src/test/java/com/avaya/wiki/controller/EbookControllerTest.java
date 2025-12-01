@@ -1,6 +1,7 @@
 package com.avaya.wiki.controller;
 
 import com.avaya.wiki.domain.Ebook;
+import com.avaya.wiki.request.EbookQuery;
 import com.avaya.wiki.service.EbookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -31,7 +33,7 @@ public class EbookControllerTest {
         ebook2.setId(2L);
         ebook2.setName("ebook2");
 
-        when(ebookService.list()).thenReturn(Arrays.asList(ebook1, ebook2));
+        when(ebookService.list(any(EbookQuery.class))).thenReturn(Arrays.asList(ebook1, ebook2));
 
         mockMvc.perform(get("/ebook/list"))
                 .andExpect(status().isOk())
