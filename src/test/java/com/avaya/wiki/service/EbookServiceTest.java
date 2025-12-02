@@ -3,6 +3,7 @@ package com.avaya.wiki.service;
 import com.avaya.wiki.domain.Ebook;
 import com.avaya.wiki.mapper.EbookMapper;
 import com.avaya.wiki.request.EbookQuery;
+import com.avaya.wiki.response.EbookResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,11 +42,11 @@ public class EbookServiceTest {
         EbookQuery ebookQuery = new EbookQuery();
         when(ebookMapper.list(any(EbookQuery.class))).thenReturn(Arrays.asList(ebook1, ebook2));
 
-        List<Ebook> result = ebookService.list(ebookQuery);
+        List<EbookResponse> result = ebookService.list(ebookQuery);
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertTrue(result.contains(ebook1));
-        assertTrue(result.contains(ebook2));
+        assertEquals("ebook1", result.get(0).getName());
+        assertEquals("ebook2", result.get(1).getName());
 
         verify(ebookMapper).list(ebookQuery);
         verifyNoMoreInteractions(ebookMapper);

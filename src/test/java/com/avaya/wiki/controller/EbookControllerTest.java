@@ -1,7 +1,7 @@
 package com.avaya.wiki.controller;
 
-import com.avaya.wiki.domain.Ebook;
 import com.avaya.wiki.request.EbookQuery;
+import com.avaya.wiki.response.EbookResponse;
 import com.avaya.wiki.service.EbookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +26,14 @@ public class EbookControllerTest {
 
     @Test
     void list_ShouldReturnSuccessResponseWithEbooks() throws Exception {
-        Ebook ebook1 = new Ebook();
-        ebook1.setId(1L);
-        ebook1.setName("ebook1");
-        Ebook ebook2 = new Ebook();
-        ebook2.setId(2L);
-        ebook2.setName("ebook2");
+        EbookResponse ebookResponse1 = new EbookResponse();
+        ebookResponse1.setId(1L);
+        ebookResponse1.setName("ebook1");
+        EbookResponse ebookResponse2 = new EbookResponse();
+        ebookResponse2.setId(2L);
+        ebookResponse2.setName("ebook2");
 
-        when(ebookService.list(any(EbookQuery.class))).thenReturn(Arrays.asList(ebook1, ebook2));
+        when(ebookService.list(any(EbookQuery.class))).thenReturn(Arrays.asList(ebookResponse1, ebookResponse2));
 
         mockMvc.perform(get("/ebook/list"))
                 .andExpect(status().isOk())
