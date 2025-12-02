@@ -2,6 +2,14 @@
 target/
 .DS_Store
 
+# vue3
+web/node_modules/
+web/dist/
+web/build/
+web/.vscode/
+web/README.md
+
+
 # Compiled class file
 *.class
 
