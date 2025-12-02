@@ -38,15 +38,16 @@ public class EbookServiceTest {
 
     @Test
     void list_ShouldReturnAllEbooks() {
-        when(ebookMapper.list()).thenReturn(Arrays.asList(ebook1, ebook2));
+        EbookQuery ebookQuery = new EbookQuery();
+        when(ebookMapper.list(any(EbookQuery.class))).thenReturn(Arrays.asList(ebook1, ebook2));
 
-        List<Ebook> result = ebookService.list(new EbookQuery());
+        List<Ebook> result = ebookService.list(ebookQuery);
         assertNotNull(result);
         assertEquals(2, result.size());
         assertTrue(result.contains(ebook1));
         assertTrue(result.contains(ebook2));
 
-        verify(ebookMapper).list();
+        verify(ebookMapper).list(ebookQuery);
         verifyNoMoreInteractions(ebookMapper);
     }
 

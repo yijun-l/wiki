@@ -14,7 +14,7 @@ public class EbookService {
     private final EbookMapper ebookMapper;
 
     public List<Ebook> list(EbookQuery ebookQuery){
-        return ebookMapper.list();
+        return ebookMapper.list(ebookQuery);
     }
 
 }
