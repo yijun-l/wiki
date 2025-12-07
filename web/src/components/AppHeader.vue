@@ -1,23 +1,29 @@
 <template>
-    <a-layout-header class="header">
-      <div class="logo" />
-      <a-menu
-        v-model:selectedKeys="selectedKeys1"
-        theme="dark"
-        mode="horizontal"
-        :style="{ lineHeight: '64px' }"
-      >
-        <a-menu-item key="1">nav 1</a-menu-item>
-        <a-menu-item key="2">nav 2</a-menu-item>
-        <a-menu-item key="3">nav 3</a-menu-item>
-      </a-menu>
-    </a-layout-header>
+  <a-layout-header class="header">
+    <div class="logo" />
+    <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
+      <a-menu-item key="home">
+        <router-link to="/">Home</router-link>
+      </a-menu-item>
+      <a-menu-item key="admin">
+        <router-link to="/admin">Admin</router-link>
+      </a-menu-item>
+      <a-menu-item key="about">
+        <router-link to="/about">About</router-link>
+      </a-menu-item>
+    </a-menu>
+  </a-layout-header>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
-const selectedKeys1 = ref<string[]>(['2']);
+// Get current route information
+const route = useRoute();
+
+// Delayed execution (after route ready), auto-reactive updates
+const selectedKeys = computed(() => [route.name?.toLowerCase() || 'home']);
 </script>
 
 <style scoped></style>
