@@ -10,20 +10,17 @@
                 :loading - Boolean loading state (reactive binding)
                 @change - Event handler for table changes (v-on shorthand)
             -->
-            <a-table :columns="columns" :row-key="(record) => record.id" :data-source="ebooks" :pagination="pagination"
+            <a-table :columns="columns" :row-key="rowKey" :data-source="ebooks" :pagination="pagination"
                 :loading="loading" @change="handleTableChange">
-                <template #action="{ record }">
-                    <!-- Space component to add spacing between buttons -->
-                    <a-space size="small">
-                        <!-- Primary button for edit action -->
-                        <a-button type="primary" @click="handleEdit(record)">
-                            Edit
-                        </a-button>
-                        <!-- Danger button for delete action -->
-                        <a-button type="primary" danger @click="handleDelete(record)">
-                            Delete
-                        </a-button>
-                    </a-space>
+                <template #bodyCell="{ column, record }">
+                    <template v-if="column.key === 'actions'">
+                        <a-space size="small">
+                            <!-- Primary button for edit action -->
+                            <a-button type="primary" @click="handleEdit(record)">Edit</a-button>
+                            <!-- Danger button for delete action -->
+                            <a-button type="primary" danger @click="handleDelete(record)">Delete</a-button>
+                        </a-space>
+                    </template>
                 </template>
             </a-table>
         </a-layout-content>
@@ -32,28 +29,22 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import axios from 'axios'
+import type { TablePaginationConfig, TableColumnType } from 'ant-design-vue'
 
-const loading = ref(true)
+const loading = ref(false)
 
 // Define what an ebook looks like
 interface Ebook {
     id: number
     name: string
     version: string
-    viewCount: number
-    voteCount: number
+    views: number
+    likes: number
 }
 
 // Sample entry
-const ebooks = ref<Ebook[]>([
-    {
-        id: 1,
-        name: 'Deploying Avaya Aura® Communication Manager in Virtualized Environment',
-        version: '10.2',
-        viewCount: 100,
-        voteCount: 5
-    }
-])
+const ebooks = ref<Ebook[]>([])
 
 // Pagination configuration object for table component
 // Uses reactive() to make the object reactive - changes automatically trigger UI updates
@@ -64,31 +55,34 @@ const pagination = reactive({
 })
 
 // Table columns definition
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'name'
-    },
-    {
-        title: 'Version',
-        dataIndex: 'version'
-    },
-    {
-        title: 'Views',
-        dataIndex: 'viewCount'
-    },
-    {
-        title: 'Likes',
-        dataIndex: 'voteCount'
-    },
-    {
-        title: 'Actions',
-        slots: { customRender: 'action' }
-    }
+const columns: TableColumnType<Ebook>[] = [
+    { title: 'Name', dataIndex: 'name' },
+    { title: 'Version', dataIndex: 'version' },
+    { title: 'Views', dataIndex: 'views' },
+    { title: 'Likes', dataIndex: 'likes' },
+    { title: 'Actions', key: 'actions' }
 ]
 
-const handleTableChange = () => {
-    console.log('Table changed')
+// Fetch data from backend
+const fetchEbooks = async () => {
+    loading.value = true;
+    try {
+        const { data } = await axios.get('http://localhost:8080/ebook/list')
+        ebooks.value = data.data
+        pagination.total = ebooks.value.length
+    } catch (err) {
+        console.error('Failed to fetch books:', err)
+    } finally {
+        loading.value = false
+    }
+}
+
+const rowKey = (record: Ebook) => record.id
+
+const handleTableChange = (pager: TablePaginationConfig) => {
+    pagination.current = pager.current ?? 1
+    pagination.pageSize = pager.pageSize ?? 10
+    fetchEbooks()
 }
 
 const handleEdit = (record: Ebook) => {
@@ -100,6 +94,6 @@ const handleDelete = (record: Ebook) => {
 }
 
 onMounted(() => {
-    loading.value = false;
+    fetchEbooks()
 })
 </script>

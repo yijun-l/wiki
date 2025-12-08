@@ -15,4 +15,6 @@ public class EbookResponse {
     private String docUrl;
     private String docType;
     private String version;
+    private Integer views;
+    private Integer likes;
 }
