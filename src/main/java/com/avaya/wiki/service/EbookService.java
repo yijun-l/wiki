@@ -4,6 +4,7 @@ import com.avaya.wiki.domain.Ebook;
 import com.avaya.wiki.mapper.EbookMapper;
 import com.avaya.wiki.request.EbookQuery;
 import com.avaya.wiki.response.EbookResponse;
+import com.avaya.wiki.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,9 @@ import java.util.List;
 public class EbookService {
     private final EbookMapper ebookMapper;
 
-    public List<EbookResponse> list(EbookQuery ebookQuery){
+    public PageResponse<EbookResponse> list(EbookQuery ebookQuery){
+        PageResponse<EbookResponse> pageResponse = new PageResponse<>();
+        pageResponse.setTotal(ebookMapper.getTotal());
         List<Ebook> ebookList = ebookMapper.list(ebookQuery);
         ArrayList<EbookResponse> ebookResponseList = new ArrayList<>();
         for (Ebook ebook : ebookList){
@@ -24,7 +27,9 @@ public class EbookService {
             BeanUtils.copyProperties(ebook, ebookResponse);
             ebookResponseList.add(ebookResponse);
         }
-        return ebookResponseList;
+        pageResponse.setRecords(ebookResponseList);
+
+        return pageResponse;
     }
 
 }

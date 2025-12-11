@@ -9,4 +9,5 @@ import java.util.List;
 @Mapper
 public interface EbookMapper {
     List<Ebook> list(EbookQuery query);
+    int getTotal();
 }

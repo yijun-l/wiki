@@ -2,6 +2,7 @@ package com.avaya.wiki.controller;
 
 import com.avaya.wiki.request.EbookQuery;
 import com.avaya.wiki.response.EbookResponse;
+import com.avaya.wiki.response.PageResponse;
 import com.avaya.wiki.service.EbookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,18 +33,20 @@ public class EbookControllerTest {
         EbookResponse ebookResponse2 = new EbookResponse();
         ebookResponse2.setId(2L);
         ebookResponse2.setName("ebook2");
+        PageResponse<EbookResponse> pageResponse = new PageResponse<>();
+        pageResponse.setRecords(Arrays.asList(ebookResponse1, ebookResponse2));
 
-        when(ebookService.list(any(EbookQuery.class))).thenReturn(Arrays.asList(ebookResponse1, ebookResponse2));
+        when(ebookService.list(any(EbookQuery.class))).thenReturn(pageResponse);
 
         mockMvc.perform(get("/ebook/list"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("200 OK"))
-                .andExpect(jsonPath("$.data").isArray())
-                .andExpect(jsonPath("$.data.length()").value(2))
-                .andExpect(jsonPath("$.data[0].id").value(1))
-                .andExpect(jsonPath("$.data[0].name").value("ebook1"))
-                .andExpect(jsonPath("$.data[1].id").value(2))
-                .andExpect(jsonPath("$.data[1].name").value("ebook2"));
+                .andExpect(jsonPath("$.data.records").isArray())
+                .andExpect(jsonPath("$.data.records.length()").value(2))
+                .andExpect(jsonPath("$.data.records[0].id").value(1))
+                .andExpect(jsonPath("$.data.records[0].name").value("ebook1"))
+                .andExpect(jsonPath("$.data.records[1].id").value(2))
+                .andExpect(jsonPath("$.data.records[1].name").value("ebook2"));
     }
 }

@@ -4,6 +4,7 @@ import com.avaya.wiki.domain.Ebook;
 import com.avaya.wiki.mapper.EbookMapper;
 import com.avaya.wiki.request.EbookQuery;
 import com.avaya.wiki.response.EbookResponse;
+import com.avaya.wiki.response.PageResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -42,14 +42,13 @@ public class EbookServiceTest {
         EbookQuery ebookQuery = new EbookQuery();
         when(ebookMapper.list(any(EbookQuery.class))).thenReturn(Arrays.asList(ebook1, ebook2));
 
-        List<EbookResponse> result = ebookService.list(ebookQuery);
+        PageResponse<EbookResponse> result = ebookService.list(ebookQuery);
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals("ebook1", result.get(0).getName());
-        assertEquals("ebook2", result.get(1).getName());
+        assertEquals(2, result.getRecords().size());
+        assertEquals("ebook1", result.getRecords().get(0).getName());
+        assertEquals("ebook2", result.getRecords().get(1).getName());
 
         verify(ebookMapper).list(ebookQuery);
-        verifyNoMoreInteractions(ebookMapper);
     }
 
 
