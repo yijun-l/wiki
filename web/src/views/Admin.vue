@@ -1,30 +1,28 @@
 <template>
-    <a-layout>
-        <a-layout-content>
-            <!-- 
-            a-table - Ant Design Vue table component
-                :columns - Table column definitions (reactive binding with v-bind shorthand)
-                :row-key - Unique key for each row (function returns record.id)
-                :data-source - Data array for table rows (reactive binding)
-                :pagination - Pagination config object (reactive binding)
-                :loading - Boolean loading state (reactive binding)
-                @change - Event handler for table changes (v-on shorthand)
-            -->
-            <a-table :columns="columns" :row-key="rowKey" :data-source="ebooks" :pagination="pagination"
-                :loading="loading" @change="handleTableChange">
-                <template #bodyCell="{ column, record }">
-                    <template v-if="column.key === 'actions'">
-                        <a-space size="small">
-                            <!-- Primary button for edit action -->
-                            <a-button type="primary" @click="handleEdit(record)">Edit</a-button>
-                            <!-- Danger button for delete action -->
-                            <a-button type="primary" danger @click="handleDelete(record)">Delete</a-button>
-                        </a-space>
-                    </template>
-                </template>
-            </a-table>
-        </a-layout-content>
-    </a-layout>
+
+    <!-- 
+    a-table - Ant Design Vue table component
+        :columns - Table column definitions (reactive binding with v-bind shorthand)
+        :row-key - Unique key for each row (function returns record.id)
+        :data-source - Data array for table rows (reactive binding)
+        :pagination - Pagination config object (reactive binding)
+        :loading - Boolean loading state (reactive binding)
+        @change - Event handler for table changes (v-on shorthand)
+    -->
+    <a-table :columns="columns" :row-key="rowKey" :data-source="ebooks" :pagination="pagination" :loading="loading"
+        @change="handleTableChange">
+        <template #bodyCell="{ column, record }">
+            <template v-if="column.key === 'actions'">
+                <a-space size="small">
+                    <!-- Primary button for edit action -->
+                    <a-button type="primary" @click="handleEdit(record)">Edit</a-button>
+                    <!-- Danger button for delete action -->
+                    <a-button type="primary" danger @click="handleDelete(record)">Delete</a-button>
+                </a-space>
+            </template>
+        </template>
+    </a-table>
+
 </template>
 
 <script setup lang="ts">
@@ -67,9 +65,14 @@ const columns: TableColumnType<Ebook>[] = [
 const fetchEbooks = async () => {
     loading.value = true;
     try {
-        const { data } = await axios.get('http://localhost:8080/ebook/list')
-        ebooks.value = data.data
-        pagination.total = ebooks.value.length
+        const { data } = await axios.get('http://localhost:8080/ebook/list', {
+            params: {
+                page: pagination.current,
+                size: pagination.pageSize
+            }
+        })
+        ebooks.value = data.data.records
+        pagination.total = data.data.total
     } catch (err) {
         console.error('Failed to fetch books:', err)
     } finally {
