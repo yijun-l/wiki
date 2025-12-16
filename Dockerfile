@@ -8,7 +8,7 @@ WORKDIR /app
 COPY pom.xml .
 
 # Copy source code
-COPY COPY src ./src
+COPY src ./src
 
 # Package the application (JAR is created in /app/target/)
 RUN mvn package -DskipTests
