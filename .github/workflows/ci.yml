@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/spring-boot-app
+      IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/wiki-service
       TAG: ${{ github.sha }}
 
     steps:
@@ -44,12 +44,12 @@ jobs:
 
       # 6. Build Docker image
       - name: Build Docker image
-        run:
+        run: |
           docker build . --file Dockerfile --tag ${{ env.IMAGE_NAME }}:${{ env.TAG }}
           docker tag ${{ env.IMAGE_NAME }}:${{ env.TAG }} ${{ env.IMAGE_NAME }}:latest
 
       # 7. Push image to Docker Hub
       - name: Push Docker images
-        run:
+        run: |
           docker push ${{ env.IMAGE_NAME }}:${{ env.TAG }}
           docker push ${{ env.IMAGE_NAME }}:latest
