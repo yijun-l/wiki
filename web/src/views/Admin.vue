@@ -23,6 +23,27 @@
         </template>
     </a-table>
 
+    <a-modal v-model:open="open" title="Edit Ebook" @ok="handleOk" @cancel="handleCancel" :width="520" centered
+        :maskClosable="false" okText="Confirm" cancelText="Cancel" :bodyStyle="{ padding: '24px 32px' }">
+        <a-form :model="editForm" layout="vertical">
+            <a-form-item label="Name">
+                <a-input v-model:value="editForm.name" />
+            </a-form-item>
+            <a-form-item label="Version">
+                <a-input v-model:value="editForm.version" />
+            </a-form-item>
+            <a-form-item label="Document URL">
+                <a-input v-model:value="editForm.docUrl" />
+            </a-form-item>
+            <a-form-item label="Category 1 ID">
+                <a-input v-model:value="editForm.cat1Id" />
+            </a-form-item>
+            <a-form-item label="Category 2 ID">
+                <a-input v-model:value="editForm.cat2Id" />
+            </a-form-item>
+        </a-form>
+    </a-modal>
+
 </template>
 
 <script setup lang="ts">
@@ -30,16 +51,40 @@ import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import type { TablePaginationConfig, TableColumnType } from 'ant-design-vue'
 
-const loading = ref(false)
+const loading = ref<boolean>(false)
+const open = ref<boolean>(false)
+const selectedItem = ref<Ebook | null>(null)
+
+const handleOk = (e: MouseEvent) => {
+    open.value = false
+}
+
+const handleCancel = () => {
+    open.value = false
+}
 
 // Define what an ebook looks like
 interface Ebook {
     id: number
     name: string
     version: string
+    cat1Id: number
+    cat2Id: number
+    docUrl: string
     views: number
     likes: number
 }
+
+const editForm = reactive<Ebook>({
+    id: 0,
+    name: '',
+    version: '',
+    cat1Id: 0,
+    cat2Id: 0,
+    docUrl: '',
+    views: 0,
+    likes: 0
+})
 
 // Sample entry
 const ebooks = ref<Ebook[]>([])
@@ -89,7 +134,8 @@ const handleTableChange = (pager: TablePaginationConfig) => {
 }
 
 const handleEdit = (record: Ebook) => {
-    console.log('Edit:', record)
+    Object.assign(editForm, record)
+    open.value = true
 }
 
 const handleDelete = (record: Ebook) => {
