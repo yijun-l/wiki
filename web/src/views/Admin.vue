@@ -23,24 +23,46 @@
         </template>
     </a-table>
 
-    <a-modal v-model:open="open" title="Edit Ebook" @ok="handleOk" @cancel="handleCancel" :width="520" centered
+    <a-modal v-model:open="open" title="Edit Ebook Entry" @ok="handleOk" @cancel="handleCancel" :width="520" centered
         :maskClosable="false" okText="Confirm" cancelText="Cancel" :bodyStyle="{ padding: '24px 32px' }">
         <a-form :model="editForm" layout="vertical">
             <a-form-item label="Name">
                 <a-input v-model:value="editForm.name" />
             </a-form-item>
-            <a-form-item label="Version">
-                <a-input v-model:value="editForm.version" />
+            <a-row gutter="16">
+                <a-col :span="12">
+                    <a-form-item label="Category 1 ID">
+                        <a-input v-model:value="editForm.cat1Id" />
+                    </a-form-item>
+                </a-col>
+                <a-col :span="12">
+                    <a-form-item label="Category 2 ID">
+                        <a-input v-model:value="editForm.cat2Id" />
+                    </a-form-item>
+                </a-col>
+            </a-row>
+            <a-form-item label="Description">
+                <a-input v-model:value="editForm.descText" />
+            </a-form-item>
+            <a-form-item label="Cover URL">
+                <a-input v-model:value="editForm.coverUrl" />
             </a-form-item>
             <a-form-item label="Document URL">
                 <a-input v-model:value="editForm.docUrl" />
             </a-form-item>
-            <a-form-item label="Category 1 ID">
-                <a-input v-model:value="editForm.cat1Id" />
-            </a-form-item>
-            <a-form-item label="Category 2 ID">
-                <a-input v-model:value="editForm.cat2Id" />
-            </a-form-item>
+
+            <a-row gutter="16">
+                <a-col :span="12">
+                    <a-form-item label="Document Type">
+                        <a-input v-model:value="editForm.docType" />
+                    </a-form-item>
+                </a-col>
+                <a-col :span="12">
+                    <a-form-item label="Version">
+                        <a-input v-model:value="editForm.version" />
+                    </a-form-item>
+                </a-col>
+            </a-row>
         </a-form>
     </a-modal>
 
@@ -57,10 +79,13 @@ import type { TablePaginationConfig, TableColumnType } from 'ant-design-vue'
 interface Ebook {
     id: number
     name: string
-    version: string
     cat1Id: number
     cat2Id: number
+    descText: string
+    coverUrl: string
     docUrl: string
+    docType: string
+    version: string
     views: number
     likes: number
 }
@@ -132,21 +157,30 @@ const handleDelete = (record: Ebook) => {
 // Modal and Form Logic
 // ============================================================
 const open = ref<boolean>(false)
-const selectedItem = ref<Ebook | null>(null)
 
 const editForm = reactive<Ebook>({
     id: 0,
     name: '',
-    version: '',
     cat1Id: 0,
     cat2Id: 0,
+    descText: '',
+    coverUrl: '',
     docUrl: '',
+    docType: '',
+    version: '',
     views: 0,
     likes: 0
 })
 
-const handleOk = (e: MouseEvent) => {
-    open.value = false
+const handleOk = async () => {
+    try {
+        const response = await axios.post('http://localhost:8080/ebook/save', editForm)
+        open.value = false
+        fetchEbooks()
+    } catch (err) {
+        console.error('Failed to update ebook:', err)
+    }
+
 }
 
 const handleCancel = () => {
