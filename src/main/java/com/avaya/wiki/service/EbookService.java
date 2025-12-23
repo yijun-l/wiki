@@ -3,6 +3,7 @@ package com.avaya.wiki.service;
 import com.avaya.wiki.domain.Ebook;
 import com.avaya.wiki.mapper.EbookMapper;
 import com.avaya.wiki.request.EbookQuery;
+import com.avaya.wiki.request.EbookSaveRequest;
 import com.avaya.wiki.response.EbookResponse;
 import com.avaya.wiki.response.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,10 @@ public class EbookService {
         pageResponse.setRecords(ebookResponseList);
 
         return pageResponse;
+    }
+
+    public void save(EbookSaveRequest ebookSaveRequest){
+
     }
 
 }

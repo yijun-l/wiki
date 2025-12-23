@@ -51,19 +51,9 @@ import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import type { TablePaginationConfig, TableColumnType } from 'ant-design-vue'
 
-const loading = ref<boolean>(false)
-const open = ref<boolean>(false)
-const selectedItem = ref<Ebook | null>(null)
-
-const handleOk = (e: MouseEvent) => {
-    open.value = false
-}
-
-const handleCancel = () => {
-    open.value = false
-}
-
-// Define what an ebook looks like
+// ============================================================
+// General type definition for Ebook entries
+// ============================================================
 interface Ebook {
     id: number
     name: string
@@ -75,18 +65,10 @@ interface Ebook {
     likes: number
 }
 
-const editForm = reactive<Ebook>({
-    id: 0,
-    name: '',
-    version: '',
-    cat1Id: 0,
-    cat2Id: 0,
-    docUrl: '',
-    views: 0,
-    likes: 0
-})
-
-// Sample entry
+// ============================================================
+// Data fetching and pagination state
+// ============================================================
+const loading = ref<boolean>(false)
 const ebooks = ref<Ebook[]>([])
 
 // Pagination configuration object for table component
@@ -96,15 +78,6 @@ const pagination = reactive({
     pageSize: 10,    // Number of items per page
     total: 0         // Total number of items (will be updated from API response)
 })
-
-// Table columns definition
-const columns: TableColumnType<Ebook>[] = [
-    { title: 'Name', dataIndex: 'name' },
-    { title: 'Version', dataIndex: 'version' },
-    { title: 'Views', dataIndex: 'views' },
-    { title: 'Likes', dataIndex: 'likes' },
-    { title: 'Actions', key: 'actions' }
-]
 
 // Fetch data from backend
 const fetchEbooks = async () => {
@@ -125,6 +98,18 @@ const fetchEbooks = async () => {
     }
 }
 
+// ============================================================
+// Table Interaction Logic
+// ============================================================
+const columns: TableColumnType<Ebook>[] = [
+    { title: 'Name', dataIndex: 'name' },
+    { title: 'Version', dataIndex: 'version' },
+    { title: 'Views', dataIndex: 'views' },
+    { title: 'Likes', dataIndex: 'likes' },
+    { title: 'Actions', key: 'actions' }
+]
+
+
 const rowKey = (record: Ebook) => record.id
 
 const handleTableChange = (pager: TablePaginationConfig) => {
@@ -142,6 +127,35 @@ const handleDelete = (record: Ebook) => {
     console.log('Delete:', record)
 }
 
+
+// ============================================================
+// Modal and Form Logic
+// ============================================================
+const open = ref<boolean>(false)
+const selectedItem = ref<Ebook | null>(null)
+
+const editForm = reactive<Ebook>({
+    id: 0,
+    name: '',
+    version: '',
+    cat1Id: 0,
+    cat2Id: 0,
+    docUrl: '',
+    views: 0,
+    likes: 0
+})
+
+const handleOk = (e: MouseEvent) => {
+    open.value = false
+}
+
+const handleCancel = () => {
+    open.value = false
+}
+
+// ============================================================
+// Lifecycle Hooks
+// ============================================================
 onMounted(() => {
     fetchEbooks()
 })

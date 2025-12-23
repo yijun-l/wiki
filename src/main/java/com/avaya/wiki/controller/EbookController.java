@@ -1,14 +1,13 @@
 package com.avaya.wiki.controller;
 
 import com.avaya.wiki.request.EbookQuery;
+import com.avaya.wiki.request.EbookSaveRequest;
 import com.avaya.wiki.response.CommonResponse;
 import com.avaya.wiki.response.EbookResponse;
 import com.avaya.wiki.response.PageResponse;
 import com.avaya.wiki.service.EbookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +21,13 @@ public class EbookController {
         commonResponse.setSuccess(true);
         commonResponse.setMessage("200 OK");
         commonResponse.setData(ebookService.list(ebookQuery));
+        return commonResponse;
+    }
+
+    @PostMapping("/save")
+    public CommonResponse save(@RequestBody EbookSaveRequest ebookSaveRequest){
+        CommonResponse commonResponse = new CommonResponse();
+        ebookService.save(ebookSaveRequest);
         return commonResponse;
     }
 }
