@@ -1,9 +1,11 @@
 package com.avaya.wiki.service;
 
 import com.avaya.wiki.domain.Ebook;
+import com.avaya.wiki.exception.ResourceNotFoundException;
 import com.avaya.wiki.mapper.EbookMapper;
 import com.avaya.wiki.request.EbookQuery;
 import com.avaya.wiki.request.EbookSaveRequest;
+import com.avaya.wiki.request.EbookUpdateRequest;
 import com.avaya.wiki.response.EbookResponse;
 import com.avaya.wiki.response.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +20,12 @@ import java.util.List;
 public class EbookService {
     private final EbookMapper ebookMapper;
 
-    public PageResponse<EbookResponse> list(EbookQuery ebookQuery){
+    public PageResponse<EbookResponse> list(EbookQuery ebookQuery) {
         PageResponse<EbookResponse> pageResponse = new PageResponse<>();
         pageResponse.setTotal(ebookMapper.getTotal());
         List<Ebook> ebookList = ebookMapper.list(ebookQuery);
         ArrayList<EbookResponse> ebookResponseList = new ArrayList<>();
-        for (Ebook ebook : ebookList){
+        for (Ebook ebook : ebookList) {
             EbookResponse ebookResponse = new EbookResponse();
             BeanUtils.copyProperties(ebook, ebookResponse);
             ebookResponseList.add(ebookResponse);
@@ -33,14 +35,26 @@ public class EbookService {
         return pageResponse;
     }
 
-    public void save(EbookSaveRequest ebookSaveRequest){
+    public void save(EbookSaveRequest ebookSaveRequest) {
         Ebook ebook = new Ebook();
         BeanUtils.copyProperties(ebookSaveRequest, ebook);
-        if (ebook.getId() == 0){
+        if (ebook.getId() == 0) {
 
         } else {
             ebookMapper.update(ebook);
         }
+    }
+
+    public void update(Long id, EbookUpdateRequest ebookUpdateRequest) {
+        if (!ebookMapper.existsById(id)) {
+            throw new ResourceNotFoundException("Ebook not found" + id);
+        }
+
+        Ebook ebook = new Ebook();
+        ebook.setId(id);
+        BeanUtils.copyProperties(ebookUpdateRequest, ebook);
+
+        ebookMapper.update(ebook);
     }
 
 }

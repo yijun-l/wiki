@@ -50,4 +50,10 @@
     <select id="getTotal" resultType="int">
         SELECT COUNT(*) FROM public.ebook
     </select>
+    <select id="existsById" resultType="int">
+        SELECT 1
+        FROM public.ebook
+        WHERE id = #{id}
+        LIMIT 1
+    </select>
 </mapper>
