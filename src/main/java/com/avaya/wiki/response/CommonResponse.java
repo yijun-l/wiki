@@ -9,7 +9,6 @@ public class CommonResponse<T> {
     public static <T> CommonResponse<T> success(T data) {
         CommonResponse<T> commonResponse = new CommonResponse<>();
         commonResponse.setSuccess(true);
-        commonResponse.setMessage("200 OK");
         commonResponse.setData(data);
         return commonResponse;
     }
@@ -18,7 +17,6 @@ public class CommonResponse<T> {
         CommonResponse<T> commonResponse = new CommonResponse<>();
         commonResponse.setSuccess(false);
         commonResponse.setMessage(message);
-        commonResponse.setData(null);
         return commonResponse;
     }
 
