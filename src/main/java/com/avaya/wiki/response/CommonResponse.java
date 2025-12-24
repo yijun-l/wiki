@@ -1,12 +1,50 @@
 package com.avaya.wiki.response;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Setter
-@Getter
 public class CommonResponse<T> {
+
     private boolean success;
     private String message;
     private T data;
+
+    public static <T> CommonResponse<T> success(T data) {
+        CommonResponse<T> commonResponse = new CommonResponse<>();
+        commonResponse.setSuccess(true);
+        commonResponse.setMessage("200 OK");
+        commonResponse.setData(data);
+        return commonResponse;
+    }
+
+    public static <T> CommonResponse<T> error(String message) {
+        CommonResponse<T> commonResponse = new CommonResponse<>();
+        commonResponse.setSuccess(false);
+        commonResponse.setMessage(message);
+        commonResponse.setData(null);
+        return commonResponse;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+
 }
