@@ -10,4 +10,5 @@ import java.util.List;
 public interface EbookMapper {
     List<Ebook> list(EbookQuery query);
     int getTotal();
+    int update(Ebook ebook);
 }

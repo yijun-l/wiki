@@ -34,7 +34,13 @@ public class EbookService {
     }
 
     public void save(EbookSaveRequest ebookSaveRequest){
+        Ebook ebook = new Ebook();
+        BeanUtils.copyProperties(ebookSaveRequest, ebook);
+        if (ebook.getId() == 0){
 
+        } else {
+            ebookMapper.update(ebook);
+        }
     }
 
 }
