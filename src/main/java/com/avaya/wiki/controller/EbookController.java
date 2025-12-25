@@ -2,6 +2,7 @@ package com.avaya.wiki.controller;
 
 import com.avaya.wiki.request.EbookQuery;
 import com.avaya.wiki.request.EbookSaveRequest;
+import com.avaya.wiki.request.EbookUpdateRequest;
 import com.avaya.wiki.response.CommonResponse;
 import com.avaya.wiki.response.EbookResponse;
 import com.avaya.wiki.response.PageResponse;
@@ -25,9 +26,17 @@ public class EbookController {
     }
 
     @PostMapping("/save")
-    public CommonResponse save(@RequestBody EbookSaveRequest ebookSaveRequest){
+    public CommonResponse save(@RequestBody EbookSaveRequest ebookSaveRequest) {
         CommonResponse commonResponse = new CommonResponse();
         ebookService.save(ebookSaveRequest);
         return commonResponse;
+    }
+
+    @PatchMapping("/{id}")
+    public CommonResponse<Void> updatePartial(
+            @PathVariable Long id,
+            @RequestBody EbookUpdateRequest ebookUpdateRequest) {
+        ebookService.update(id, ebookUpdateRequest);
+        return CommonResponse.success(null);
     }
 }

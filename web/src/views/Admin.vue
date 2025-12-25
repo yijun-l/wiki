@@ -174,7 +174,7 @@ const editForm = reactive<Ebook>({
 
 const handleOk = async () => {
     try {
-        const response = await axios.post('http://localhost:8080/ebook/save', editForm)
+        const response = await axios.patch(`http://localhost:8080/ebook/${editForm.id}`, editForm)
         open.value = false
         fetchEbooks()
     } catch (err) {
