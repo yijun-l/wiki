@@ -13,6 +13,8 @@ public interface EbookMapper {
 
     int getTotal();
 
+    Ebook getById(Long id);
+
     int update(Ebook ebook);
 
     int existsByIdRaw(@Param("id") Long id);

@@ -32,6 +32,11 @@ public class EbookController {
         return commonResponse;
     }
 
+    @GetMapping("/{id}")
+    public CommonResponse<EbookResponse> getById(@PathVariable Long id) {
+        return CommonResponse.success(ebookService.getById(id));
+    }
+
     @PatchMapping("/{id}")
     public CommonResponse<Void> updatePartial(
             @PathVariable Long id,

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.avaya.wiki.mapper.EbookMapper">
+    <select id="getById" resultType="com.avaya.wiki.domain.Ebook">
+        SELECT id, name, cat1_id, cat2_id, desc_text, cover_url, doc_url, doc_type, version, views, likes
+        FROM public.ebook
+        WHERE id = #{id}
+    </select>
     <update id="update" parameterType="com.avaya.wiki.domain.Ebook">
         UPDATE public.ebook
         <set>

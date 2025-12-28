@@ -45,6 +45,18 @@ public class EbookService {
         }
     }
 
+    public EbookResponse getById(Long id) {
+        if (!ebookMapper.existsById(id)) {
+            throw new ResourceNotFoundException("Ebook not found" + id);
+        }
+
+        Ebook ebook = ebookMapper.getById(id);
+        EbookResponse ebookResponse = new EbookResponse();
+        BeanUtils.copyProperties(ebook, ebookResponse);
+
+        return ebookResponse;
+    }
+
     public void update(Long id, EbookUpdateRequest ebookUpdateRequest) {
         if (!ebookMapper.existsById(id)) {
             throw new ResourceNotFoundException("Ebook not found" + id);
