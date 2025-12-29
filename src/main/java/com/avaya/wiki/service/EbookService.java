@@ -4,6 +4,7 @@ import com.avaya.wiki.domain.Ebook;
 import com.avaya.wiki.exception.ResourceNotFoundException;
 import com.avaya.wiki.mapper.EbookMapper;
 import com.avaya.wiki.request.EbookQuery;
+import com.avaya.wiki.request.EbookQueryRequest;
 import com.avaya.wiki.request.EbookSaveRequest;
 import com.avaya.wiki.request.EbookUpdateRequest;
 import com.avaya.wiki.response.EbookResponse;
@@ -45,16 +46,26 @@ public class EbookService {
         }
     }
 
+    public PageResponse<EbookResponse> list(EbookQueryRequest ebookQueryRequest) {
+        PageResponse<EbookResponse> pageResponse = new PageResponse<>();
+        pageResponse.setTotal(ebookMapper.getTotal());
+        List<Ebook> ebookList = ebookMapper.list(ebookQueryRequest);
+        ArrayList<EbookResponse> ebookResponseList = new ArrayList<>(ebookList.size());
+        for (Ebook ebook : ebookList) {
+            ebookResponseList.add(toResponse(ebook));
+        }
+        pageResponse.setRecords(ebookResponseList);
+
+        return pageResponse;
+    }
+
     public EbookResponse getById(Long id) {
         if (!ebookMapper.existsById(id)) {
             throw new ResourceNotFoundException("Ebook not found" + id);
         }
-
         Ebook ebook = ebookMapper.getById(id);
-        EbookResponse ebookResponse = new EbookResponse();
-        BeanUtils.copyProperties(ebook, ebookResponse);
 
-        return ebookResponse;
+        return toResponse(ebook);
     }
 
     public void update(Long id, EbookUpdateRequest ebookUpdateRequest) {
@@ -69,4 +80,9 @@ public class EbookService {
         ebookMapper.update(ebook);
     }
 
+    private EbookResponse toResponse(Ebook ebook) {
+        EbookResponse response = new EbookResponse();
+        BeanUtils.copyProperties(ebook, response);
+        return response;
+    }
 }

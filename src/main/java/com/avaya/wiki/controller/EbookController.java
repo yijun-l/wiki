@@ -1,6 +1,7 @@
 package com.avaya.wiki.controller;
 
 import com.avaya.wiki.request.EbookQuery;
+import com.avaya.wiki.request.EbookQueryRequest;
 import com.avaya.wiki.request.EbookSaveRequest;
 import com.avaya.wiki.request.EbookUpdateRequest;
 import com.avaya.wiki.response.CommonResponse;
@@ -31,6 +32,12 @@ public class EbookController {
         ebookService.save(ebookSaveRequest);
         return commonResponse;
     }
+
+    @GetMapping
+    public CommonResponse<PageResponse<EbookResponse>> list(EbookQueryRequest ebookQueryRequest) {
+        return CommonResponse.success(ebookService.list(ebookQueryRequest));
+    }
+
 
     @GetMapping("/{id}")
     public CommonResponse<EbookResponse> getById(@PathVariable Long id) {

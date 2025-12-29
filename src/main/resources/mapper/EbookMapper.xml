@@ -40,9 +40,22 @@
         SELECT *
         FROM public.ebook
         <where>
-            <if test="id != null">
-                id = #{id}
+<!--            <if test="id != null">-->
+<!--                id = #{id}-->
+<!--            </if>-->
+            <if test="name != null and name != ''">
+                name LIKE CONCAT('%', #{name}, '%')
             </if>
+        </where>
+        ORDER BY id
+        <if test="limit != 0">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+    <select id="list" resultType="com.avaya.wiki.domain.Ebook" parameterType="com.avaya.wiki.request.EbookQueryRequest">
+        SELECT *
+        FROM public.ebook
+        <where>
             <if test="name != null and name != ''">
                 name LIKE CONCAT('%', #{name}, '%')
             </if>
