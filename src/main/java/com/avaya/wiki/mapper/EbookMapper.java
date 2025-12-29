@@ -20,6 +20,8 @@ public interface EbookMapper {
 
     int update(Ebook ebook);
 
+    int delete(Long id);
+
     int existsByIdRaw(@Param("id") Long id);
 
     default boolean existsById(Long id) {

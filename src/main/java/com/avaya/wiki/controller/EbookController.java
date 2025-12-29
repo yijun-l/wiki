@@ -51,4 +51,10 @@ public class EbookController {
         ebookService.update(id, ebookUpdateRequest);
         return CommonResponse.success(null);
     }
+
+    @DeleteMapping("/{id}")
+    public CommonResponse<Void> delete(@PathVariable Long id) {
+        ebookService.delete(id);
+        return CommonResponse.success(null);
+    }
 }

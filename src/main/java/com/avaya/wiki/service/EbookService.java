@@ -80,6 +80,14 @@ public class EbookService {
         ebookMapper.update(ebook);
     }
 
+    public void delete(Long id) {
+        if (!ebookMapper.existsById(id)) {
+            throw new ResourceNotFoundException("Ebook not found" + id);
+        }
+
+        ebookMapper.delete(id);
+    }
+
     private EbookResponse toResponse(Ebook ebook) {
         EbookResponse response = new EbookResponse();
         BeanUtils.copyProperties(ebook, response);
