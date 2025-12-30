@@ -51,16 +51,9 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { message } from 'ant-design-vue';
-import { StarOutlined, TagOutlined, FolderOutlined } from '@ant-design/icons-vue';
-import axios from 'axios'
-
-// Define what an ebook looks like
-interface Ebook {
-    id: number
-    name: string
-    version: string
-    descText: string
-}
+import { StarOutlined } from '@ant-design/icons-vue';
+import { listEbook } from '@/api/ebooks'
+import type { Ebook } from '@/types/ebook'
 
 const ebooks = ref<Ebook[]>([])
 const loading = ref(true)
@@ -82,14 +75,12 @@ const handleFavorite = (item: Ebook) => {
 const fetchEbooks = async () => {
     loading.value = true;
     try {
-        const { data } = await axios.get('http://localhost:8080/ebook/list', {
-            params: {
-                page: pagination.current,
-                size: pagination.pageSize
-            }
-        })
-        ebooks.value = data.data.records
-        pagination.total = data.data.total
+        const { data } = await listEbook({
+            page: pagination.current,
+            size: pagination.pageSize
+    })
+        ebooks.value = data.records
+        pagination.total = data.total
     } catch (err: any) {
         error.value = `Loading failed: ${err.message || 'Unknown error'}`
     } finally {

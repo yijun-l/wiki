@@ -33,7 +33,7 @@
             <a-form-item label="Name">
                 <a-input v-model:value="editForm.name" />
             </a-form-item>
-            <a-row gutter="16">
+            <a-row :gutter="16">
                 <a-col :span="12">
                     <a-form-item label="Category 1 ID">
                         <a-input v-model:value="editForm.cat1Id" />
@@ -55,7 +55,7 @@
                 <a-input v-model:value="editForm.docUrl" />
             </a-form-item>
 
-            <a-row gutter="16">
+            <a-row :gutter="16">
                 <a-col :span="12">
                     <a-form-item label="Document Type">
                         <a-input v-model:value="editForm.docType" />
@@ -74,26 +74,10 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import axios from 'axios'
 import type { TablePaginationConfig, TableColumnType } from 'ant-design-vue'
 import { message } from 'ant-design-vue';
-
-// ============================================================
-// General type definition for Ebook entries
-// ============================================================
-interface Ebook {
-    id: number
-    name: string
-    cat1Id: number
-    cat2Id: number
-    descText: string
-    coverUrl: string
-    docUrl: string
-    docType: string
-    version: string
-    views: number
-    likes: number
-}
+import type { Ebook } from '@/types/ebook'
+import { listEbook, updateEbook, deleteEbook } from '@/api/ebooks'
 
 // ============================================================
 // Data fetching and pagination state
@@ -113,14 +97,12 @@ const pagination = reactive({
 const fetchEbooks = async () => {
     loading.value = true;
     try {
-        const { data } = await axios.get('http://localhost:8080/ebook/list', {
-            params: {
-                page: pagination.current,
-                size: pagination.pageSize
-            }
+        const { data } = await listEbook({
+            page: pagination.current,
+            size: pagination.pageSize
         })
-        ebooks.value = data.data.records
-        pagination.total = data.data.total
+        ebooks.value = data.records
+        pagination.total = data.total
     } catch (err) {
         console.error('Failed to fetch books:', err)
     } finally {
@@ -153,17 +135,13 @@ const handleEdit = (record: Ebook) => {
     open.value = true
 }
 
-const handleDelete = (record: Ebook) => {
-    console.log('Delete:', record)
-}
-
 // ============================================================
 // POP Confirm Logic
 // ============================================================
 
 const confirm = async (record: Ebook) => {
     try {
-        await axios.delete(`http://localhost:8080/ebook/${record.id}`)
+        await deleteEbook(record.id)
         message.success('Ebook deleted successfully')
         fetchEbooks()
     } catch (err) {
@@ -194,7 +172,7 @@ const editForm = reactive<Ebook>({
 
 const handleOk = async () => {
     try {
-        const response = await axios.patch(`http://localhost:8080/ebook/${editForm.id}`, editForm)
+        await updateEbook(editForm.id, editForm)
         open.value = false
         fetchEbooks()
     } catch (err) {
