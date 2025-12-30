@@ -17,7 +17,11 @@
                     <!-- Primary button for edit action -->
                     <a-button type="primary" @click="handleEdit(record)">Edit</a-button>
                     <!-- Danger button for delete action -->
-                    <a-button type="primary" danger @click="handleDelete(record)">Delete</a-button>
+                    <a-popconfirm title="Are you sure you want to delete this ebook?"
+                        description="This action cannot be undone." ok-text="Yes" cancel-text="No"
+                        @confirm="confirm(record)">
+                        <a-button type="primary" danger>Delete</a-button>
+                    </a-popconfirm>
                 </a-space>
             </template>
         </template>
@@ -72,6 +76,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import type { TablePaginationConfig, TableColumnType } from 'ant-design-vue'
+import { message } from 'ant-design-vue';
 
 // ============================================================
 // General type definition for Ebook entries
@@ -151,6 +156,21 @@ const handleEdit = (record: Ebook) => {
 const handleDelete = (record: Ebook) => {
     console.log('Delete:', record)
 }
+
+// ============================================================
+// POP Confirm Logic
+// ============================================================
+
+const confirm = async (record: Ebook) => {
+    try {
+        await axios.delete(`http://localhost:8080/ebook/${record.id}`)
+        message.success('Ebook deleted successfully')
+        fetchEbooks()
+    } catch (err) {
+        console.error('Failed to delete ebook:', err)
+        message.error('Failed to delete ebook')
+    }
+};
 
 
 // ============================================================
