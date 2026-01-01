@@ -1,5 +1,6 @@
 package com.avaya.wiki.controller;
 
+import com.avaya.wiki.request.EbookCreateRequest;
 import com.avaya.wiki.request.EbookQueryRequest;
 import com.avaya.wiki.request.EbookUpdateRequest;
 import com.avaya.wiki.response.CommonResponse;
@@ -14,6 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/ebooks")
 public class EbookController {
     private final EbookService ebookService;
+
+    @PostMapping
+    public CommonResponse<Long> create(@RequestBody EbookCreateRequest ebookCreateRequest) {
+        Long id = ebookService.create(ebookCreateRequest);
+        return CommonResponse.success(id);
+    }
 
     @GetMapping
     public CommonResponse<PageResponse<EbookResponse>> list(EbookQueryRequest ebookQueryRequest) {

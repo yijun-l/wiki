@@ -1,8 +1,10 @@
 package com.avaya.wiki.service;
 
+import com.avaya.wiki.common.SnowflakeIdGenerator;
 import com.avaya.wiki.domain.Ebook;
 import com.avaya.wiki.exception.ResourceNotFoundException;
 import com.avaya.wiki.mapper.EbookMapper;
+import com.avaya.wiki.request.EbookCreateRequest;
 import com.avaya.wiki.request.EbookQueryRequest;
 import com.avaya.wiki.request.EbookUpdateRequest;
 import com.avaya.wiki.response.EbookResponse;
@@ -18,6 +20,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EbookService {
     private final EbookMapper ebookMapper;
+    private final SnowflakeIdGenerator idGenerator = new SnowflakeIdGenerator();
+
+    public Long create(EbookCreateRequest ebookCreateRequest) {
+        Ebook ebook = new Ebook();
+        BeanUtils.copyProperties(ebookCreateRequest, ebook);
+        Long id = idGenerator.getNextID();
+        ebook.setId(id);
+        ebookMapper.create(ebook);
+        return id;
+    }
 
     public PageResponse<EbookResponse> list(EbookQueryRequest ebookQueryRequest) {
         PageResponse<EbookResponse> pageResponse = new PageResponse<>();

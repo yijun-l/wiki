@@ -10,6 +10,8 @@ import java.util.List;
 @Mapper
 public interface EbookMapper {
 
+    int create(Ebook ebook);
+
     List<Ebook> list(EbookQueryRequest ebookQueryRequest);
 
     int getTotal();

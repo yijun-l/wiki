@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.avaya.wiki.mapper.EbookMapper">
+    <insert id="create" parameterType="com.avaya.wiki.domain.Ebook">
+        INSERT INTO public.ebook (id, name, cat1_id, cat2_id, desc_text, cover_url, doc_url, doc_type, version, views,
+        likes)
+        VALUES (#{id}, #{name}, #{cat1Id}, #{cat2Id}, #{descText}, #{coverUrl}, #{docUrl}, #{docType}, #{version},
+        #{views}, #{likes})
+    </insert>
     <select id="getById" resultType="com.avaya.wiki.domain.Ebook">
         SELECT id, name, cat1_id, cat2_id, desc_text, cover_url, doc_url, doc_type, version, views, likes
         FROM public.ebook
