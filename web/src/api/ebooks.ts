@@ -5,6 +5,11 @@ import type {Ebook} from '@/types/ebook'
 
 const BASE_PATH = '/ebooks'
 
+// POST /ebooks
+export function createEbook(data: Partial<Ebook>){
+  return request.post(`${BASE_PATH}`, data)
+}
+
 // GET /ebooks?page=1&size=10
 export function listEbook(params: { page: number; size: number }) {
   return request.get(`${BASE_PATH}`, { params })

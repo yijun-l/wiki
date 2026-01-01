@@ -1,5 +1,8 @@
 <template>
 
+    <div style="text-align: right; margin-bottom: 16px;">
+        <a-button type="primary" @click="openCreateModal">New</a-button>
+    </div>
     <!-- 
     a-table - Ant Design Vue table component
         :columns - Table column definitions (reactive binding with v-bind shorthand)
@@ -11,11 +14,12 @@
     -->
     <a-table :columns="columns" :row-key="rowKey" :data-source="ebooks" :pagination="pagination" :loading="loading"
         @change="handleTableChange">
+
         <template #bodyCell="{ column, record }">
             <template v-if="column.key === 'actions'">
                 <a-space size="small">
                     <!-- Primary button for edit action -->
-                    <a-button type="primary" @click="handleEdit(record)">Edit</a-button>
+                    <a-button type="primary" @click="openEditModal(record)">Edit</a-button>
                     <!-- Danger button for delete action -->
                     <a-popconfirm title="Are you sure you want to delete this ebook?"
                         description="This action cannot be undone." ok-text="Yes" cancel-text="No"
@@ -27,43 +31,44 @@
         </template>
     </a-table>
 
-    <a-modal v-model:open="open" title="Edit Ebook Entry" @ok="handleOk" @cancel="handleCancel" :width="520" centered
-        :maskClosable="false" okText="Confirm" cancelText="Cancel" :bodyStyle="{ padding: '24px 32px' }">
-        <a-form :model="editForm" layout="vertical">
+    <a-modal v-model:open="modalOpen" :title="modalMode === 'create' ? 'Create Ebook' : 'Edit Ebook'" @ok="submitModal" @cancel="modalOpen = false" 
+        :width="520" centered :maskClosable="false" okText="Confirm" cancelText="Cancel"
+        :bodyStyle="{ padding: '24px 32px' }">
+        <a-form :model="formModel" layout="vertical">
             <a-form-item label="Name">
-                <a-input v-model:value="editForm.name" />
+                <a-input v-model:value="formModel.name" />
             </a-form-item>
             <a-row :gutter="16">
                 <a-col :span="12">
                     <a-form-item label="Category 1 ID">
-                        <a-input v-model:value="editForm.cat1Id" />
+                        <a-input v-model:value="formModel.cat1Id" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="12">
                     <a-form-item label="Category 2 ID">
-                        <a-input v-model:value="editForm.cat2Id" />
+                        <a-input v-model:value="formModel.cat2Id" />
                     </a-form-item>
                 </a-col>
             </a-row>
             <a-form-item label="Description">
-                <a-input v-model:value="editForm.descText" />
+                <a-input v-model:value="formModel.descText" />
             </a-form-item>
             <a-form-item label="Cover URL">
-                <a-input v-model:value="editForm.coverUrl" />
+                <a-input v-model:value="formModel.coverUrl" />
             </a-form-item>
             <a-form-item label="Document URL">
-                <a-input v-model:value="editForm.docUrl" />
+                <a-input v-model:value="formModel.docUrl" />
             </a-form-item>
 
             <a-row :gutter="16">
                 <a-col :span="12">
                     <a-form-item label="Document Type">
-                        <a-input v-model:value="editForm.docType" />
+                        <a-input v-model:value="formModel.docType" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="12">
                     <a-form-item label="Version">
-                        <a-input v-model:value="editForm.version" />
+                        <a-input v-model:value="formModel.version" />
                     </a-form-item>
                 </a-col>
             </a-row>
@@ -77,7 +82,7 @@ import { ref, reactive, onMounted } from 'vue'
 import type { TablePaginationConfig, TableColumnType } from 'ant-design-vue'
 import { message } from 'ant-design-vue';
 import type { Ebook } from '@/types/ebook'
-import { listEbook, updateEbook, deleteEbook } from '@/api/ebooks'
+import { listEbook, updateEbook, deleteEbook, createEbook } from '@/api/ebooks'
 
 // ============================================================
 // Data fetching and pagination state
@@ -130,11 +135,6 @@ const handleTableChange = (pager: TablePaginationConfig) => {
     fetchEbooks()
 }
 
-const handleEdit = (record: Ebook) => {
-    Object.assign(editForm, record)
-    open.value = true
-}
-
 // ============================================================
 // POP Confirm Logic
 // ============================================================
@@ -154,9 +154,12 @@ const confirm = async (record: Ebook) => {
 // ============================================================
 // Modal and Form Logic
 // ============================================================
-const open = ref<boolean>(false)
 
-const editForm = reactive<Ebook>({
+type ModalMode = 'create' | 'edit'
+const modalOpen = ref<boolean>(false)
+const modalMode = ref<ModalMode>('create')
+
+const defaultFormModel = (): Ebook => ({
     id: 0,
     name: '',
     cat1Id: 0,
@@ -170,19 +173,35 @@ const editForm = reactive<Ebook>({
     likes: 0
 })
 
-const handleOk = async () => {
-    try {
-        await updateEbook(editForm.id, editForm)
-        open.value = false
-        fetchEbooks()
-    } catch (err) {
-        console.error('Failed to update ebook:', err)
-    }
+const formModel = reactive<Ebook>(defaultFormModel())
 
+const openCreateModal = () => {
+    Object.assign(formModel, defaultFormModel())
+    modalMode.value = 'create'
+    modalOpen.value = true
+    // createModalOpen.value = true
 }
 
-const handleCancel = () => {
-    open.value = false
+const openEditModal = (record: Ebook) => {
+    Object.assign(formModel, record)
+    modalMode.value = 'edit'
+    modalOpen.value = true
+}
+
+const submitModal = async () => {
+    try {
+        if (modalMode.value == 'create') {
+            await createEbook(formModel)
+            message.success('Ebook created successfully')
+        } else if (modalMode.value = 'edit') {
+            await updateEbook(formModel.id, formModel)
+            message.success('Ebook updated successfully')
+        }
+        modalOpen.value = false
+        fetchEbooks()
+    } catch (err) {
+         message.error('Operation failed')
+    }
 }
 
 // ============================================================
