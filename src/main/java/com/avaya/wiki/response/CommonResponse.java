@@ -14,9 +14,14 @@ public class CommonResponse<T> {
     }
 
     public static <T> CommonResponse<T> error(String message) {
+        return CommonResponse.error(message, null);
+    }
+
+    public static <T> CommonResponse<T> error(String message, T data) {
         CommonResponse<T> commonResponse = new CommonResponse<>();
         commonResponse.setSuccess(false);
         commonResponse.setMessage(message);
+        commonResponse.setData(data);
         return commonResponse;
     }
 

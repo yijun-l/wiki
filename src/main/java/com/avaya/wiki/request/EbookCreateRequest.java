@@ -1,13 +1,36 @@
 package com.avaya.wiki.request;
 
+import jakarta.validation.constraints.*;
+
 public class EbookCreateRequest {
+    @NotBlank(message = "Name cannot be blank")
+    @Size(max = 100, message = "Name cannot exceed 100 characters")
     private String name;
+
+    @NotNull(message = "Category 1 ID cannot be null")
+    @Min(value = 1, message = "Category 1 ID must be greater than 0")
     private Long cat1Id;
+
+    @NotNull(message = "Category 2 ID cannot be null")
+    @Min(value = 1, message = "Category 2 ID must be greater than 0")
     private Long cat2Id;
+
+    @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String descText;
+
+    @Size(max = 200, message = "Cover URL cannot exceed 200 characters")
     private String coverUrl;
+
+    @NotBlank(message = "Document URL cannot be blank")
+    @Size(max = 200, message = "Cover URL cannot exceed 200 characters")
     private String docUrl;
+
+    @NotBlank(message = "Document type cannot be blank")
+    @Size(max = 20, message = "Version cannot exceed 20 characters")
     private String docType;
+
+    @NotBlank(message = "Version cannot be blank")
+    @Size(max = 20, message = "Version cannot exceed 20 characters")
     private String version;
 
     public String getName() {

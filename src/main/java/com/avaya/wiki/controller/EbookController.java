@@ -7,35 +7,41 @@ import com.avaya.wiki.response.CommonResponse;
 import com.avaya.wiki.response.EbookResponse;
 import com.avaya.wiki.response.PageResponse;
 import com.avaya.wiki.service.EbookService;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/ebooks")
 public class EbookController {
     private final EbookService ebookService;
 
+    public EbookController(EbookService ebookService) {
+        this.ebookService = ebookService;
+    }
+
     @PostMapping
-    public CommonResponse<Long> create(@RequestBody EbookCreateRequest ebookCreateRequest) {
+    public CommonResponse<Long> create(@Valid @RequestBody EbookCreateRequest ebookCreateRequest) {
         Long id = ebookService.create(ebookCreateRequest);
         return CommonResponse.success(id);
     }
 
     @GetMapping
-    public CommonResponse<PageResponse<EbookResponse>> list(EbookQueryRequest ebookQueryRequest) {
+    public CommonResponse<PageResponse<EbookResponse>> list(@Valid @ModelAttribute EbookQueryRequest ebookQueryRequest) {
         return CommonResponse.success(ebookService.list(ebookQueryRequest));
     }
 
     @GetMapping("/{id}")
-    public CommonResponse<EbookResponse> getById(@PathVariable Long id) {
+    public CommonResponse<EbookResponse> getById(@PathVariable @Min(1) Long id) {
         return CommonResponse.success(ebookService.getById(id));
     }
 
     @PatchMapping("/{id}")
     public CommonResponse<Void> updatePartial(
             @PathVariable Long id,
-            @RequestBody EbookUpdateRequest ebookUpdateRequest) {
+            @Valid @RequestBody EbookUpdateRequest ebookUpdateRequest) {
         ebookService.update(id, ebookUpdateRequest);
         return CommonResponse.success(null);
     }
@@ -43,7 +49,7 @@ public class EbookController {
     @PutMapping("/{id}")
     public CommonResponse<Void> update(
             @PathVariable Long id,
-            @RequestBody EbookUpdateRequest ebookUpdateRequest) {
+            @Valid @RequestBody EbookUpdateRequest ebookUpdateRequest) {
         ebookService.update(id, ebookUpdateRequest);
         return CommonResponse.success(null);
     }
