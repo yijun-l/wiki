@@ -2,7 +2,7 @@ package com.avaya.wiki.service;
 
 import com.avaya.wiki.domain.Ebook;
 import com.avaya.wiki.mapper.EbookMapper;
-import com.avaya.wiki.request.EbookQuery;
+import com.avaya.wiki.request.EbookQueryRequest;
 import com.avaya.wiki.response.EbookResponse;
 import com.avaya.wiki.response.PageResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ public class EbookServiceTest {
     private Ebook ebook1, ebook2;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         ebook1 = new Ebook();
         ebook1.setId(1L);
         ebook1.setName("ebook1");
@@ -39,16 +39,16 @@ public class EbookServiceTest {
 
     @Test
     void list_ShouldReturnAllEbooks() {
-        EbookQuery ebookQuery = new EbookQuery();
-        when(ebookMapper.list(any(EbookQuery.class))).thenReturn(Arrays.asList(ebook1, ebook2));
+        EbookQueryRequest ebookQueryRequest = new EbookQueryRequest();
+        when(ebookMapper.list(any(EbookQueryRequest.class))).thenReturn(Arrays.asList(ebook1, ebook2));
 
-        PageResponse<EbookResponse> result = ebookService.list(ebookQuery);
+        PageResponse<EbookResponse> result = ebookService.list(ebookQueryRequest);
         assertNotNull(result);
         assertEquals(2, result.getRecords().size());
         assertEquals("ebook1", result.getRecords().get(0).getName());
         assertEquals("ebook2", result.getRecords().get(1).getName());
 
-        verify(ebookMapper).list(ebookQuery);
+        verify(ebookMapper).list(ebookQueryRequest);
     }
 
 

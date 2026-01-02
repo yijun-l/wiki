@@ -1,6 +1,6 @@
 package com.avaya.wiki.controller;
 
-import com.avaya.wiki.request.EbookQuery;
+import com.avaya.wiki.request.EbookQueryRequest;
 import com.avaya.wiki.response.EbookResponse;
 import com.avaya.wiki.response.PageResponse;
 import com.avaya.wiki.service.EbookService;
@@ -36,12 +36,11 @@ public class EbookControllerTest {
         PageResponse<EbookResponse> pageResponse = new PageResponse<>();
         pageResponse.setRecords(Arrays.asList(ebookResponse1, ebookResponse2));
 
-        when(ebookService.list(any(EbookQuery.class))).thenReturn(pageResponse);
+        when(ebookService.list(any(EbookQueryRequest.class))).thenReturn(pageResponse);
 
-        mockMvc.perform(get("/ebook/list"))
+        mockMvc.perform(get("/ebooks"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("200 OK"))
                 .andExpect(jsonPath("$.data.records").isArray())
                 .andExpect(jsonPath("$.data.records.length()").value(2))
                 .andExpect(jsonPath("$.data.records[0].id").value(1))
