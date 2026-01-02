@@ -1,6 +1,6 @@
 <template>
 
-    <div style="text-align: right; margin-bottom: 16px;">
+    <div style="text-align: left; margin-bottom: 16px;">
         <a-button type="primary" @click="openCreateModal">New</a-button>
     </div>
     <!-- 
@@ -108,8 +108,8 @@ const fetchEbooks = async () => {
         })
         ebooks.value = data.records
         pagination.total = data.total
-    } catch (err) {
-        console.error('Failed to fetch books:', err)
+    } catch (err: any) {
+        message.error(err?.response?.data?.message || 'Failed to fetch books')
     } finally {
         loading.value = false
     }
@@ -145,7 +145,6 @@ const confirm = async (record: Ebook) => {
         message.success('Ebook deleted successfully')
         fetchEbooks()
     } catch (err) {
-        console.error('Failed to delete ebook:', err)
         message.error('Failed to delete ebook')
     }
 };
@@ -179,7 +178,6 @@ const openCreateModal = () => {
     Object.assign(formModel, defaultFormModel())
     modalMode.value = 'create'
     modalOpen.value = true
-    // createModalOpen.value = true
 }
 
 const openEditModal = (record: Ebook) => {
@@ -193,14 +191,14 @@ const submitModal = async () => {
         if (modalMode.value == 'create') {
             await createEbook(formModel)
             message.success('Ebook created successfully')
-        } else if (modalMode.value = 'edit') {
+        } else if (modalMode.value == 'edit') {
             await updateEbook(formModel.id, formModel)
             message.success('Ebook updated successfully')
         }
         modalOpen.value = false
         fetchEbooks()
-    } catch (err) {
-         message.error('Operation failed')
+    } catch (err: any) {
+        message.error(err?.response?.data?.message || 'Operation failed')
     }
 }
 
