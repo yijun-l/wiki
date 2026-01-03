@@ -14,7 +14,7 @@ public interface EbookMapper {
 
     List<Ebook> list(EbookQueryRequest ebookQueryRequest);
 
-    int getTotal();
+    int getTotal(EbookQueryRequest ebookQueryRequest);
 
     Ebook getById(Long id);
 

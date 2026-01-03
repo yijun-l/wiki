@@ -16,3 +16,9 @@ export interface Ebook {
     views: number
     likes: number
 }
+
+export interface EbookQueryParams {
+    page: number
+    size: number
+    name?: string
+}

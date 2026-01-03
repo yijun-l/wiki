@@ -1,8 +1,10 @@
 <template>
 
-    <div style="text-align: left; margin-bottom: 16px;">
-        <a-button type="primary" @click="openCreateModal">New</a-button>
-    </div>
+    <a-space style="margin-bottom: 16px">
+        <a-input-search v-model:value="keyword" placeholder="Search ebooks" enter-button @search="onSearch" allowClear/>
+        <a-button type="primary" @click="openCreateModal" style="width: 70px;">New</a-button>
+    </a-space>
+
     <!-- 
     a-table - Ant Design Vue table component
         :columns - Table column definitions (reactive binding with v-bind shorthand)
@@ -19,20 +21,20 @@
             <template v-if="column.key === 'actions'">
                 <a-space size="small">
                     <!-- Primary button for edit action -->
-                    <a-button type="primary" @click="openEditModal(record)">Edit</a-button>
+                    <a-button type="primary" @click="openEditModal(record)" style="width: 70px;">Edit</a-button>
                     <!-- Danger button for delete action -->
                     <a-popconfirm title="Are you sure you want to delete this ebook?"
                         description="This action cannot be undone." ok-text="Yes" cancel-text="No"
                         @confirm="confirm(record)">
-                        <a-button type="primary" danger>Delete</a-button>
+                        <a-button type="primary" danger style="width: 70px;">Delete</a-button>
                     </a-popconfirm>
                 </a-space>
             </template>
         </template>
     </a-table>
 
-    <a-modal v-model:open="modalOpen" :title="modalMode === 'create' ? 'Create Ebook' : 'Edit Ebook'" @ok="submitModal" @cancel="modalOpen = false" 
-        :width="520" centered :maskClosable="false" okText="Confirm" cancelText="Cancel"
+    <a-modal v-model:open="modalOpen" :title="modalMode === 'create' ? 'Create Ebook' : 'Edit Ebook'" @ok="submitModal"
+        @cancel="modalOpen = false" :width="520" centered :maskClosable="false" okText="Confirm" cancelText="Cancel"
         :bodyStyle="{ padding: '24px 32px' }">
         <a-form :model="formModel" layout="vertical">
             <a-form-item label="Name">
@@ -81,7 +83,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { TablePaginationConfig, TableColumnType } from 'ant-design-vue'
 import { message } from 'ant-design-vue';
-import type { Ebook } from '@/types/ebook'
+import type { Ebook, EbookQueryParams } from '@/types/ebook'
 import { listEbook, updateEbook, deleteEbook, createEbook } from '@/api/ebooks'
 
 // ============================================================
@@ -99,13 +101,17 @@ const pagination = reactive({
 })
 
 // Fetch data from backend
-const fetchEbooks = async () => {
+const fetchEbooks = async (name?:string) => {
     loading.value = true;
     try {
-        const { data } = await listEbook({
+        const params: EbookQueryParams = {
             page: pagination.current,
-            size: pagination.pageSize
-        })
+            size: pagination.pageSize,
+        }
+        if (name) {
+            params.name = name
+        }
+        const { data } = await listEbook(params)
         ebooks.value = data.records
         pagination.total = data.total
     } catch (err: any) {
@@ -113,6 +119,16 @@ const fetchEbooks = async () => {
     } finally {
         loading.value = false
     }
+}
+
+// ============================================================
+// Search the keyword
+// ============================================================
+
+const keyword = ref<string>('')
+const onSearch = async () => {
+    pagination.current = 1
+    fetchEbooks(keyword.value)
 }
 
 // ============================================================

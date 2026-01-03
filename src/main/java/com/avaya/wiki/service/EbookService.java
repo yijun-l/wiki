@@ -33,7 +33,7 @@ public class EbookService {
 
     public PageResponse<EbookResponse> list(EbookQueryRequest ebookQueryRequest) {
         PageResponse<EbookResponse> pageResponse = new PageResponse<>();
-        pageResponse.setTotal(ebookMapper.getTotal());
+        pageResponse.setTotal(ebookMapper.getTotal(ebookQueryRequest));
         List<Ebook> ebookList = ebookMapper.list(ebookQueryRequest);
         ArrayList<EbookResponse> ebookResponseList = new ArrayList<>(ebookList.size());
         for (Ebook ebook : ebookList) {

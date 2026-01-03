@@ -60,8 +60,11 @@
         FROM public.ebook
         WHERE id = #{id}
     </delete>
-    <select id="getTotal" resultType="int">
+    <select id="getTotal" resultType="int" parameterType="com.avaya.wiki.request.EbookQueryRequest">
         SELECT COUNT(*) FROM public.ebook
+        <if test="name != null and name != ''">
+                WHERE name LIKE CONCAT('%', #{name}, '%')
+        </if>
     </select>
     <select id="existsByIdRaw" resultType="int">
         SELECT 1

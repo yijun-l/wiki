@@ -1,7 +1,7 @@
 // api/ebooks.ts
 
 import request from '@/utils/request'
-import type {Ebook} from '@/types/ebook'
+import type {Ebook, EbookQueryParams} from '@/types/ebook'
 
 const BASE_PATH = '/ebooks'
 
@@ -11,7 +11,7 @@ export function createEbook(data: Partial<Ebook>){
 }
 
 // GET /ebooks?page=1&size=10
-export function listEbook(params: { page: number; size: number }) {
+export function listEbook(params: EbookQueryParams) {
   return request.get(`${BASE_PATH}`, { params })
 }
 
