@@ -44,6 +44,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<CommonResponse<?>> handleException(Exception exception) {
+        // TODO: replace with logger before production
+        exception.printStackTrace();
         return ResponseEntity
                 .status(500)
                 .body(CommonResponse.error("Internal server error"));

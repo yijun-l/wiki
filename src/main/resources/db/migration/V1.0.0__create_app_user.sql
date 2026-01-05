@@ -1,14 +1,23 @@
+-- src/main/resources/db/migration/V1.0.0__create_app_user.sql
+
+CREATE TYPE user_status AS ENUM ('active', 'disabled', 'locked');
+
 -- 1. Create user table
 CREATE TABLE IF NOT EXISTS public.app_user (
-    id BIGSERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
+    id BIGINT PRIMARY KEY,
+
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
     password_hash VARCHAR(100) NOT NULL,
     nickname VARCHAR(50),
     avatar_url TEXT,
-    status VARCHAR(20) DEFAULT 'active',
+    status user_status NOT NULL DEFAULT 'active',
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT uk_app_user_username UNIQUE (username),
+    CONSTRAINT uk_app_user_email UNIQUE (email)
 );
 
 -- 2. Create indexes

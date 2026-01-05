@@ -27,6 +27,8 @@ public class EbookService {
         BeanUtils.copyProperties(ebookCreateRequest, ebook);
         Long id = idGenerator.getNextID();
         ebook.setId(id);
+        ebook.setViews(0);
+        ebook.setLikes(0);
         ebookMapper.create(ebook);
         return id;
     }
