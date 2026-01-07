@@ -6,11 +6,12 @@
         <result property="username" column="username"/>
         <result property="email" column="email"/>
         <result property="nickname" column="nickname"/>
+        <result property="avatarUrl" column="avatar_url"/>
         <result property="status" column="status" typeHandler="com.avaya.wiki.mybatis.handler.UserStatusTypeHandler"/>
     </resultMap>
 
-    <select id="getById" resultType="com.avaya.wiki.domain.AppUser">
-        SELECT username, email, nickname, status
+    <select id="getById" resultMap="AppUserResultMap">
+        SELECT username, email, nickname, avatar_url, status
         FROM public.app_user
         WHERE id = #{id}
     </select>
