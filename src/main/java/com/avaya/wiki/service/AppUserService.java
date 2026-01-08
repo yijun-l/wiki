@@ -1,6 +1,7 @@
 package com.avaya.wiki.service;
 
 import com.avaya.wiki.domain.AppUser;
+import com.avaya.wiki.exception.ResourceNotFoundException;
 import com.avaya.wiki.mapper.AppUserMapper;
 import com.avaya.wiki.request.AppUserQueryRequest;
 import com.avaya.wiki.response.AppUserResponse;
@@ -37,6 +38,13 @@ public class AppUserService {
         }
         pageResponse.setRecords(appUserResponses);
         return pageResponse;
+    }
+
+    public void delete(Long id){
+        if (appUserMapper.delete(id) == 0){
+            // No such record in DB
+            throw new ResourceNotFoundException("User not found, id = " + id);
+        }
     }
 
     private AppUserResponse toResponse(AppUser appUser) {

@@ -26,4 +26,10 @@ public class AppUserController {
     public CommonResponse<PageResponse<AppUserResponse>> list(@ModelAttribute AppUserQueryRequest appUserQueryRequest) {
         return CommonResponse.success(appUserService.list(appUserQueryRequest));
     }
+
+    @DeleteMapping("/{id}")
+    public CommonResponse<Void> delete(@PathVariable @Min(1) Long id) {
+        appUserService.delete(id);
+        return CommonResponse.success(null);
+    }
 }

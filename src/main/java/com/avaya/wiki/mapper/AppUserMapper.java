@@ -13,4 +13,6 @@ public interface AppUserMapper {
     List<AppUser> list(AppUserQueryRequest appUserQueryRequest);
 
     int getTotal(AppUserQueryRequest appUserQueryRequest);
+
+    int delete(Long id);
 }
