@@ -15,4 +15,25 @@
         FROM public.app_user
         WHERE id = #{id}
     </select>
+
+    <select id="list" resultMap="AppUserResultMap">
+        SELECT username, email, nickname, avatar_url, status
+        FROM public.app_user
+        <where>
+            <if test="nickname != null and nickname != ''">
+                nickname LIKE CONCAT('%', #{nickname}, '%')
+            </if>
+        </where>
+        ORDER BY id
+        <if test="limit != 0">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="getTotal" resultType="int" parameterType="com.avaya.wiki.request.AppUserQueryRequest">
+        SELECT COUNT(*) FROM public.app_user
+        <if test="nickname != null and nickname != ''">
+            WHERE nickname LIKE CONCAT('%', #{nickname}, '%')
+        </if>
+    </select>
 </mapper>
