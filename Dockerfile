@@ -23,4 +23,5 @@ EXPOSE 8080
 COPY --from=build /app/target/*.jar app.jar
 
 # Define the entrypoint to run the JAR
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "/app.jar"]
