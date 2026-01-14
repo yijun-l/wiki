@@ -22,6 +22,9 @@ public class AppUserService {
 
     public AppUserResponse getById(Long id) {
         AppUser appUser = appUserMapper.getById(id);
+        if (appUser == null) {
+            throw new ResourceNotFoundException("User not found, id = " + id);
+        }
         AppUserResponse appUserResponse = new AppUserResponse();
         BeanUtils.copyProperties(appUser, appUserResponse);
         appUserResponse.setStatus(appUser.getStatus().getDbValue());
