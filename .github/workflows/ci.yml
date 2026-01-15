@@ -59,7 +59,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: yijun-l/wiki-config
-          token: ${{ secrets.WIKI_CONFIG_PAT }}
           path: config-repo
 
       # 9. Update Deployment image in config repo
@@ -75,4 +74,5 @@ jobs:
           git config user.email "github-actions@github.com"
           git add .
           git commit -m "Update image to ${{ env.TAG }}"
+          git remote set-url origin https://x-access-token:${{ secrets.WIKI_CONFIG_PAT }}@github.com/yijun-l/wiki-config.git
           git push origin main
