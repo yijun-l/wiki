@@ -53,3 +53,26 @@ jobs:
         run: |
           docker push ${{ env.IMAGE_NAME }}:${{ env.TAG }}
           docker push ${{ env.IMAGE_NAME }}:latest
+
+      # 8. Checkout ArgoCD config repo
+      - name: Checkout config repo
+        uses: actions/checkout@v4
+        with:
+          repository: yijun-l/wiki-config
+          token: ${{ secrets.WIKI_CONFIG_PAT }}
+          path: config-repo
+
+      # 9. Update Deployment image in config repo
+      - name: Update Deployment image
+        run: |
+          sed -i "s|tag: .*|tag: ${{ env.TAG }}|g" config-repo/apps/wiki-service/values.yaml
+
+      # 10. Commit & push changes to config repo
+      - name: Commit & push
+        run: |
+          cd config-repo
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Update image to ${{ env.TAG }}"
+          git push origin main
