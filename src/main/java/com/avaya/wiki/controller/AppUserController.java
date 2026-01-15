@@ -1,5 +1,6 @@
 package com.avaya.wiki.controller;
 
+import com.avaya.wiki.request.AppUserCreateRequest;
 import com.avaya.wiki.request.AppUserQueryRequest;
 import com.avaya.wiki.response.AppUserResponse;
 import com.avaya.wiki.response.CommonResponse;
@@ -15,6 +16,12 @@ public class AppUserController {
 
     public AppUserController(AppUserService appUserService) {
         this.appUserService = appUserService;
+    }
+
+    @PostMapping
+    public CommonResponse<Long> create(@RequestBody AppUserCreateRequest appUserCreateRequest) {
+        Long id = appUserService.create(appUserCreateRequest);
+        return CommonResponse.success(id);
     }
 
     @GetMapping("/{id}")

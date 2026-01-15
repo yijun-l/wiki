@@ -8,6 +8,9 @@ import java.util.List;
 
 @Mapper
 public interface AppUserMapper {
+
+    int create(AppUser appUser);
+
     AppUser getById(Long id);
 
     List<AppUser> list(AppUserQueryRequest appUserQueryRequest);

@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.avaya.wiki.mapper.AppUserMapper">
 
+    <insert id="create" parameterType="com.avaya.wiki.domain.AppUser">
+        INSERT INTO public.app_user (id, username, email, password_hash, nickname, avatar_url, status)
+        VALUES (#{id}, #{username}, #{email}, #{passwordHash}, #{nickname}, #{avatarUrl},
+        #{status, typeHandler=com.avaya.wiki.mybatis.handler.UserStatusTypeHandler})
+    </insert>
+
     <resultMap id="AppUserResultMap" type="com.avaya.wiki.domain.AppUser">
         <result property="username" column="username"/>
         <result property="email" column="email"/>
