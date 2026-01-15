@@ -9,7 +9,6 @@ import com.avaya.wiki.request.EbookQueryRequest;
 import com.avaya.wiki.request.EbookUpdateRequest;
 import com.avaya.wiki.response.EbookResponse;
 import com.avaya.wiki.response.PageResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class EbookService {
     private final EbookMapper ebookMapper;
-    private final SnowflakeIdGenerator idGenerator = new SnowflakeIdGenerator();
+    private final SnowflakeIdGenerator idGenerator;
+
+    public EbookService(SnowflakeIdGenerator idGenerator, EbookMapper ebookMapper){
+        this.idGenerator = idGenerator;
+        this.ebookMapper = ebookMapper;
+    }
 
     public Long create(EbookCreateRequest ebookCreateRequest) {
         Ebook ebook = new Ebook();
