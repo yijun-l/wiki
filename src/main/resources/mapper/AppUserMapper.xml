@@ -17,13 +17,13 @@
     </resultMap>
 
     <select id="getById" resultMap="AppUserResultMap">
-        SELECT username, email, nickname, avatar_url, status
+        SELECT id, username, email, nickname, avatar_url, status
         FROM public.app_user
         WHERE id = #{id}
     </select>
 
     <select id="list" resultMap="AppUserResultMap">
-        SELECT username, email, nickname, avatar_url, status
+        SELECT id, username, email, nickname, avatar_url, status
         FROM public.app_user
         <where>
             <if test="nickname != null and nickname != ''">
