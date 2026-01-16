@@ -11,11 +11,13 @@ public interface AppUserMapper {
 
     int create(AppUser appUser);
 
-    AppUser getById(Long id);
-
     List<AppUser> list(AppUserQueryRequest appUserQueryRequest);
 
     int getTotal(AppUserQueryRequest appUserQueryRequest);
+
+    AppUser getById(Long id);
+
+    int update(AppUser appUser);
 
     int delete(Long id);
 }

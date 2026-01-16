@@ -36,6 +36,25 @@
         </if>
     </select>
 
+    <update id="update" parameterType="com.avaya.wiki.domain.AppUser">
+        UPDATE public.app_user
+        <set>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="passwordHash != null">
+                password_hash = #{passwordHash},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="avatarUrl != null">
+                avatar_url = #{avatarUrl},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
     <delete id="delete">
         DELETE
         FROM public.app_user

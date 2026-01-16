@@ -7,6 +7,7 @@ import com.avaya.wiki.exception.ResourceNotFoundException;
 import com.avaya.wiki.mapper.AppUserMapper;
 import com.avaya.wiki.request.AppUserCreateRequest;
 import com.avaya.wiki.request.AppUserQueryRequest;
+import com.avaya.wiki.request.AppUserUpdateRequest;
 import com.avaya.wiki.response.AppUserResponse;
 import com.avaya.wiki.response.PageResponse;
 import org.springframework.beans.BeanUtils;
@@ -61,6 +62,16 @@ public class AppUserService {
         }
         pageResponse.setRecords(appUserResponses);
         return pageResponse;
+    }
+
+    public void update(Long id, AppUserUpdateRequest appUserUpdateRequest) {
+        AppUser appUser = new AppUser();
+        BeanUtils.copyProperties(appUserUpdateRequest, appUser);
+        appUser.setId(id);
+        if (appUserMapper.update(appUser) == 0) {
+            // No such record in DB
+            throw new ResourceNotFoundException("User not found, id = " + id);
+        }
     }
 
     public void delete(Long id) {

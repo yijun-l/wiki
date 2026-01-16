@@ -2,6 +2,7 @@ package com.avaya.wiki.controller;
 
 import com.avaya.wiki.request.AppUserCreateRequest;
 import com.avaya.wiki.request.AppUserQueryRequest;
+import com.avaya.wiki.request.AppUserUpdateRequest;
 import com.avaya.wiki.response.AppUserResponse;
 import com.avaya.wiki.response.CommonResponse;
 import com.avaya.wiki.response.PageResponse;
@@ -32,6 +33,22 @@ public class AppUserController {
     @GetMapping
     public CommonResponse<PageResponse<AppUserResponse>> list(@ModelAttribute AppUserQueryRequest appUserQueryRequest) {
         return CommonResponse.success(appUserService.list(appUserQueryRequest));
+    }
+
+    @PatchMapping("/{id}")
+    public CommonResponse<Void> updatePartial(
+            @PathVariable @Min(1) Long id,
+            @RequestBody AppUserUpdateRequest appUserUpdateRequest) {
+        appUserService.update(id, appUserUpdateRequest);
+        return CommonResponse.success(null);
+    }
+
+    @PutMapping("/{id}")
+    public CommonResponse<Void> update(
+            @PathVariable @Min(1) Long id,
+            @RequestBody AppUserUpdateRequest appUserUpdateRequest) {
+        appUserService.update(id, appUserUpdateRequest);
+        return CommonResponse.success(null);
     }
 
     @DeleteMapping("/{id}")

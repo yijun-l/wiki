@@ -64,8 +64,16 @@ jobs:
       # 9. Update Deployment image in config repo
       - name: Update Deployment image
         run: |
-          sed -i "s|tag: .*|tag: ${{ env.TAG }}|g" config-repo/apps/wiki-service/values.yaml
+          sed -i "s|tag: .*|tag: ${{ env.TAG }}|g" config-repo/environments/dev/values.yaml
 
+      # check token
+      - name: Debug secret
+        run: |
+          if [ -z "${{ secrets.WIKI_CONFIG_PAT }}" ]; then
+            echo "Secret WIKI_CONFIG_PAT is empty!"
+          else
+            echo "Secret WIKI_CONFIG_PAT is set"
+          fi
       # 10. Commit & push changes to config repo
       - name: Commit & push
         run: |
@@ -73,6 +81,6 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add .
-          git commit -m "Update image to ${{ env.TAG }}"
+          git diff --quiet || git commit -m "Update image to ${{ env.TAG }}"
           git remote set-url origin https://x-access-token:${{ secrets.WIKI_CONFIG_PAT }}@github.com/yijun-l/wiki-config.git
           git push origin main
