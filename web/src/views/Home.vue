@@ -1,3 +1,5 @@
+<!-- views/Home.vue -->
+
 <template>
     <!-- Loading indicator
         a-spin: Loading indicator component from Ant Design Vue
@@ -49,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { message } from 'ant-design-vue';
 import { StarOutlined } from '@ant-design/icons-vue';
 import { listEbook } from '@/api/ebooks'
@@ -59,7 +61,10 @@ const ebooks = ref<Ebook[]>([])
 const loading = ref(true)
 const error = ref('')
 
-// Pagination configuration object for table component
+// ============================================================
+// Data fetching and pagination state
+// ============================================================
+
 // Uses reactive() to make the object reactive - changes automatically trigger UI updates
 const pagination = reactive({
     current: 1,      // Current page number (starts from 1)
@@ -78,7 +83,7 @@ const fetchEbooks = async () => {
         const { data } = await listEbook({
             page: pagination.current,
             size: pagination.pageSize
-    })
+        })
         ebooks.value = data.records
         pagination.total = data.total
     } catch (err: any) {
@@ -94,6 +99,27 @@ const onPageChange = (page: number, pageSize: number) => {
     fetchEbooks()
 }
 
+// ============================================================
+// Watch Siderbar Selection Changes
+// ============================================================
+
+const props = defineProps<{
+    selectedKeys: string[]
+}>()
+
+watch(
+    () => props.selectedKeys,
+    (val) => {
+        if (val?.length) {
+            console.log('Home view sees new selectedKeys:', val)
+        }
+    },
+    { immediate: true }
+)
+
+// ============================================================
+// Lifecycle Hooks
+// ============================================================
 onMounted(async () => {
     await fetchEbooks()
 })
