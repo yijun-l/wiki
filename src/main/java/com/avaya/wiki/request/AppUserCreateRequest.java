@@ -1,10 +1,25 @@
 package com.avaya.wiki.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class AppUserCreateRequest {
+    @NotBlank(message = "Username cannot be blank")
+    @Size(max = 50, message = "Username cannot exceed 50 characters")
     private String username;
+
+    @NotBlank(message = "Email cannot be blank")
+    @Size(max = 100, message = "Email cannot exceed 50 characters")
     private String email;
+
+    @NotBlank(message = "Password cannot be blank")
+    @Size(max = 100, message = "Password cannot exceed 50 characters")
     private String password;
+
+    @Size(max = 50, message = "Nickname cannot exceed 50 characters")
     private String nickname;
+
+    @Size(max = 100, message = "Avatar URL cannot exceed 100 characters")
     private String avatarUrl;
 
     public String getUsername() {

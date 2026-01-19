@@ -7,9 +7,12 @@ import com.avaya.wiki.response.AppUserResponse;
 import com.avaya.wiki.response.CommonResponse;
 import com.avaya.wiki.response.PageResponse;
 import com.avaya.wiki.service.AppUserService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RestController
 @RequestMapping("/users")
 public class AppUserController {
@@ -20,7 +23,7 @@ public class AppUserController {
     }
 
     @PostMapping
-    public CommonResponse<Long> create(@RequestBody AppUserCreateRequest appUserCreateRequest) {
+    public CommonResponse<Long> create(@Valid @RequestBody AppUserCreateRequest appUserCreateRequest) {
         Long id = appUserService.create(appUserCreateRequest);
         return CommonResponse.success(id);
     }
@@ -38,7 +41,7 @@ public class AppUserController {
     @PatchMapping("/{id}")
     public CommonResponse<Void> updatePartial(
             @PathVariable @Min(1) Long id,
-            @RequestBody AppUserUpdateRequest appUserUpdateRequest) {
+            @Valid @RequestBody AppUserUpdateRequest appUserUpdateRequest) {
         appUserService.update(id, appUserUpdateRequest);
         return CommonResponse.success(null);
     }
@@ -46,7 +49,7 @@ public class AppUserController {
     @PutMapping("/{id}")
     public CommonResponse<Void> update(
             @PathVariable @Min(1) Long id,
-            @RequestBody AppUserUpdateRequest appUserUpdateRequest) {
+            @Valid @RequestBody AppUserUpdateRequest appUserUpdateRequest) {
         appUserService.update(id, appUserUpdateRequest);
         return CommonResponse.success(null);
     }

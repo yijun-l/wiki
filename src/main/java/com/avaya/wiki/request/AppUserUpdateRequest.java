@@ -1,9 +1,18 @@
 package com.avaya.wiki.request;
 
+import jakarta.validation.constraints.Size;
+
 public class AppUserUpdateRequest {
+    @Size(max = 100, message = "Email cannot exceed 50 characters")
     private String email;
+
+    @Size(max = 100, message = "Password cannot exceed 50 characters")
     private String passwordHash;
+
+    @Size(max = 50, message = "Nickname cannot exceed 50 characters")
     private String nickname;
+
+    @Size(max = 100, message = "Avatar URL cannot exceed 100 characters")
     private String avatarUrl;
 
     public String getEmail() {
