@@ -47,7 +47,13 @@
         FROM public.ebook
         <where>
             <if test="name != null and name != ''">
-                name LIKE CONCAT('%', #{name}, '%')
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="cat1Id != null">
+                AND cat1_id = #{cat1Id}
+            </if>
+            <if test="cat1Id != null">
+                AND cat2_id = #{cat2Id}
             </if>
         </where>
         ORDER BY id
