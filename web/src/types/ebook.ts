@@ -21,4 +21,6 @@ export interface EbookQueryParams {
     page: number
     size: number
     name?: string
+    cat1Id?: number
+    cat2Id?: number
 }

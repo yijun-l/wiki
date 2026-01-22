@@ -1,3 +1,5 @@
+<!-- views/Admin.vue -->
+
 <template>
 
     <a-space style="margin-bottom: 16px">
@@ -80,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import type { TablePaginationConfig, TableColumnType } from 'ant-design-vue'
 import { message } from 'ant-design-vue';
 import type { Ebook, EbookQueryParams } from '@/types/ebook'
@@ -101,7 +103,7 @@ const pagination = reactive({
 })
 
 // Fetch data from backend
-const fetchEbooks = async (name?:string) => {
+const fetchEbooks = async (name?:string, cat1Id?:number, cat2Id?:number) => {
     loading.value = true;
     try {
         const params: EbookQueryParams = {
@@ -110,6 +112,12 @@ const fetchEbooks = async (name?:string) => {
         }
         if (name) {
             params.name = name
+        }
+        if (cat1Id){
+            params.cat1Id = cat1Id
+        }
+        if (cat2Id){
+            params.cat2Id = cat2Id
         }
         const { data } = await listEbook(params)
         ebooks.value = data.records
@@ -120,6 +128,28 @@ const fetchEbooks = async (name?:string) => {
         loading.value = false
     }
 }
+
+// ============================================================
+// Watch Siderbar Selection Changes
+// ============================================================
+
+const props = defineProps<{
+    selectedKeys: string[]
+}>()
+
+watch(
+    () => props.selectedKeys,
+    (val) => {
+        if (val?.length && val[0] != null) {
+            const num = val[0]
+            const str = num.toString().padStart(3, '0')
+            const cat1 = Number(str[0])
+            const cat2 = Number(str.slice(1, 3))
+            fetchEbooks(undefined,cat1, cat2)
+        }
+    },
+    { immediate: true }
+)
 
 // ============================================================
 // Search the keyword

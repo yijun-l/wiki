@@ -27,7 +27,7 @@ import { ref } from 'vue';
 const props = defineProps<{ selectedKeys: string[] }>()
 const emit = defineEmits<{ (e: 'update:selectedKeys', value: string[]): void }>()
 
-const selectedKeys = ref(props.selectedKeys)
+const selectedKeys = ref<string[]>([])
 
 const onSelect = ({ key }: { key: string }) => {
     selectedKeys.value = [key]

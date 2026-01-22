@@ -55,7 +55,7 @@ import { ref, reactive, onMounted, watch } from 'vue'
 import { message } from 'ant-design-vue';
 import { StarOutlined } from '@ant-design/icons-vue';
 import { listEbook } from '@/api/ebooks'
-import type { Ebook } from '@/types/ebook'
+import type { Ebook, EbookQueryParams } from '@/types/ebook'
 
 const ebooks = ref<Ebook[]>([])
 const loading = ref(true)
@@ -77,13 +77,23 @@ const handleFavorite = (item: Ebook) => {
 };
 
 // Fetch data from backend
-const fetchEbooks = async () => {
+const fetchEbooks = async (name?:string, cat1Id?:number, cat2Id?:number) => {
     loading.value = true;
     try {
-        const { data } = await listEbook({
+        const params: EbookQueryParams = {
             page: pagination.current,
-            size: pagination.pageSize
-        })
+            size: pagination.pageSize,
+        }
+        if (name) {
+            params.name = name
+        }
+        if (cat1Id){
+            params.cat1Id = cat1Id
+        }
+        if (cat2Id){
+            params.cat2Id = cat2Id
+        }
+        const { data } = await listEbook(params)
         ebooks.value = data.records
         pagination.total = data.total
     } catch (err: any) {
@@ -110,8 +120,12 @@ const props = defineProps<{
 watch(
     () => props.selectedKeys,
     (val) => {
-        if (val?.length) {
-            console.log('Home view sees new selectedKeys:', val)
+        if (val?.length && val[0] != null) {
+            const num = val[0]
+            const str = num.toString().padStart(3, '0')
+            const cat1 = Number(str[0])
+            const cat2 = Number(str.slice(1, 3))
+            fetchEbooks(undefined,cat1, cat2)
         }
     },
     { immediate: true }
