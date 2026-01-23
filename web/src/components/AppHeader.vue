@@ -8,6 +8,9 @@
       <a-menu-item key="admin">
         <router-link to="/admin">Admin</router-link>
       </a-menu-item>
+      <a-menu-item key="users">
+        <router-link to="/users">Users</router-link>
+      </a-menu-item>
       <a-menu-item key="about">
         <router-link to="/about">About</router-link>
       </a-menu-item>
