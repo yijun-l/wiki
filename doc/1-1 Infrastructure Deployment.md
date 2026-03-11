@@ -20,7 +20,7 @@ The deployment is managed by a series of Bash scripts hosted in the config repos
 
 Note, All scripts must be executed exclusively from the Jump Server.
 
-### 1.Define Your Environment (`cluster.env`)
+### 1. Define Your Environment (`cluster.env`)
 
 Before execution, the cluster's logical topology (IP addresses, hostnames, and credentials) must be defined in the environment file. This file serves as the **Single Source of Truth (SSoT)** for the automation suite.
 
@@ -37,7 +37,7 @@ To provide a unified entry point for the Kubernetes API Server, a **Virtual IP (
 - **HAProxy**: Provides Layer 4 load balancing for the API Server.
 - **Keepalived**: Manages VRRP-based VIP failover, ensuring control plane accessibility if a master node fails.
 
-### 4.Cluster Initialization (`k8s-cluster-init.sh`)
+### 4. Cluster Initialization (`k8s-cluster-init.sh`)
 
 The final stage involves orchestrating the Kubernetes control plane. The script:
 - Executes `kubeadm init` on the primary master.
