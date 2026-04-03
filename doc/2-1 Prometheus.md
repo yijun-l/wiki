@@ -6,7 +6,7 @@
 
 The architecture shown in the diagram illustrates Prometheus as a pull‑based system:
 
-<img src="img/1-10_prometheus_components.png" alt="prometheus_components" width="600">
+<img src="img/2-1_prometheus_components.png" alt="prometheus_components" width="600">
 
 ### 1. Prometheus Server
 
@@ -249,7 +249,7 @@ Map `prometheus.local` to your Worker Node IP in your local **hosts file** and u
 
 Navigate to **Status -> Targets** to verify that Prometheus is successfully pulling data from the Node Exporter endpoints.
 
-<img src="img/1-10_target_health.png" alt="target_health" width="955">
+<img src="img/2-1_target_health.png" alt="target_health" width="955">
 
 You can inspect the raw data by accessing a Node Exporter endpoint directly (e.g., `http://<node-ip>:9100/metrics`). 
 
@@ -263,7 +263,7 @@ node_load1 0.04
 
 Enter a metric name like `node_load1` in the **Graph** tab and click **Execute**. Prometheus will generate a time-series graph based on the collected data, allowing you to observe trends in real-time.
 
-<img src="img/1-10_graph.png" alt="target_health" width="625">
+<img src="img/2-1_graph.png" alt="graph" width="625">
 
 
 
